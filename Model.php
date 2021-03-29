@@ -2,9 +2,6 @@
 
 namespace app\core;
 
-use app\core\form\Form;
-use app\models\LoginForm;
-
 /**
  * class Model
  * @author Francis Osore <francisosore8@gmail.com>
@@ -21,6 +18,11 @@ abstract class Model
   public const RULE_MATCH = 'match';
   public const RULE_UNIQUE = 'unique';
 
+  public const RULE_TITLE = 'title';
+  public const RULE_AUTHOR = 'author';
+  public const RULE_DESCRIPTION = 'description';
+  public const RULE_COVER = 'cover';
+
   public function loadData($data)
   {
     foreach ($data as $key => $value) {
@@ -36,6 +38,12 @@ abstract class Model
   {
     return [];
   }
+
+  public function getLabel($attribute)
+  {
+    return $this->labels()[$attribute] ?? $attribute;
+  }
+
   public array $errors = [];
 
   public function validate()
@@ -125,9 +133,5 @@ abstract class Model
   public function getFirstError($attribute)
   {
     return $this->errors[$attribute][0] ?? false;
-  }
-
-  public function getLabel()
-  {
   }
 }

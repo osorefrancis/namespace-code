@@ -5,13 +5,11 @@ namespace app\core;
 use Exception;
 use app\core\View;
 use app\core\Router;
-use app\models\User;
-use app\core\db\DbModel;
 use app\core\Request;
 use app\core\db\Database;
 use app\core\Response;
 use app\core\Controller;
-use app\core\db\Database as DbDatabase;
+use app\core\db\DbModel;
 
 /**
  * Class Application
@@ -30,7 +28,7 @@ class Application
   public Database $db;
   public Session $session;
   public Response $response;
-  public ?UserModel $user;
+  public ?DbModel $user;
   public View $view;
 
 
@@ -53,11 +51,13 @@ class Application
     $this->db = new Database($config['db']);
 
     $primaryValue = $this->session->get('user');
+
     if ($primaryValue) {
       $primaryKey = $this->userClass::primaryKey();
       $this->user = $this->userClass::findOne([$primaryKey => $primaryValue]);
+    } else {
+      $this->user = null;
     }
-    // $this->user = null;
   }
 
   /**
@@ -80,12 +80,19 @@ class Application
     $this->controller = $controller;
   }
 
-  public function login(UserModel $user)
+  public static function isGuest()
+  {
+    return !self::$app->user;
+  }
+
+
+  public function login(DbModel $user)
   {
     $this->user = $user;
     $primaryKey = $user->primaryKey();
-    $primaryValue = $user->{$primaryKey};
-    $this->session->set('user', $primaryValue);
+    $value = $user->{$primaryKey};
+    $this->session->set('user', $value);
+
     return true;
   }
 
@@ -93,11 +100,6 @@ class Application
   {
     $this->user = null;
     $this->session->remove('user');
-  }
-
-  public static function isGuest()
-  {
-    return !self::$app->user;
   }
 
   public function run()
