@@ -28,13 +28,14 @@ abstract class BaseField
   public function __toString()
   {
     return sprintf(
-      '<div class="mb-3">
-        <label>%s</label>
-       %s
+      '<div class="form-floating mb-3">
+        %s
+        <label for="%s">%s</label>
         <div class="invalid-feedback">%s</div>
       </div>',
-      $this->model->getLabel($this->attribute),
       $this->renderInput(),
+      $this->attribute,
+      $this->model->getLabel($this->attribute),
       $this->model->getFirstError($this->attribute),
 
     );

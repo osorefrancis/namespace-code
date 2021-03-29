@@ -32,14 +32,15 @@ class InputField extends BaseField
   {
 
     return sprintf(
-      '<div class="mb-3">
-        <label>%s</label>
+      '<div class="form-floating mb-3">
         %s
+        <label for="%s">%s</label>
         <div class="invalid-feedback">%s</div>
       </div>',
 
-      $this->model->getLabel($this->attribute),
       $this->renderInput(),
+      $this->attribute,
+      $this->model->getLabel($this->attribute),
       $this->model->getFirstError($this->attribute),
 
     );
@@ -55,9 +56,10 @@ class InputField extends BaseField
   public function renderInput(): string
   {
     return sprintf(
-      '<input type="%s" name="%s" value="%s" class="form-control%s">',
+      '<input type="%s" name="%s" placeholder="%s" value="%s" class="form-control%s">',
       $this->type,
       $this->attribute,
+      $this->model->getLabel($this->attribute),
       $this->model->{$this->attribute},
       $this->model->hasError($this->attribute) ? ' is-invalid' : '',
       $this->model->getFirstError($this->attribute),
